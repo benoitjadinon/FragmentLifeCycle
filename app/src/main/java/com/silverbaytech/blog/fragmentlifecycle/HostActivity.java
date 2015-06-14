@@ -26,6 +26,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import static com.silverbaytech.blog.fragmentlifecycle.HostActivityState.restoreInstanceState;
+import static com.silverbaytech.blog.fragmentlifecycle.HostActivityState.saveInstanceState;
+
 import com.neenbedankt.bundles.annotation.Frozen;
 
 public class HostActivity extends FragmentActivity
@@ -38,7 +41,7 @@ public class HostActivity extends FragmentActivity
 	private Button removeButton;
 
 	@Frozen
-	private HostState mState;
+	HostState mState = HostState.NORMAL;
 
 	public HostActivity()
 	{
@@ -65,6 +68,12 @@ public class HostActivity extends FragmentActivity
 		popButton.setOnClickListener(new PopClickListener());
 
 		getSupportFragmentManager().addOnBackStackChangedListener(new BackStackListener());
+
+		if (bundle == null) {
+			mState = HostState.NORMAL;
+		} else {
+			restoreInstanceState(this, bundle);
+		}
 
 		Log.i(TAG, "onCreate exit");
 	}
@@ -99,6 +108,8 @@ public class HostActivity extends FragmentActivity
 		Log.i(TAG, "onSaveInstanceState enter");
 		super.onSaveInstanceState(outState);
 		Log.i(TAG, "onSaveInstanceState exit");
+
+		saveInstanceState(this, outState);
 	}
 
 	@Override
@@ -123,10 +134,18 @@ public class HostActivity extends FragmentActivity
 		Log.i(TAG, "onRestoreInstanceState enter");
 		super.onRestoreInstanceState(savedInstanceState);
 		Log.i(TAG, "onRestoreInstanceState exit");
+
+		changeState(mState);
 	}
 
 	private void changeState(HostState state) {
+
 		mState = state;
+
+		HostActivity.this.addButton.setVisibility(mState == HostState.NORMAL ? View.VISIBLE : View.GONE);
+		HostActivity.this.pushButton.setVisibility(mState == HostState.NORMAL ? View.VISIBLE : View.GONE);
+		HostActivity.this.removeButton.setVisibility(mState == HostState.ADDED ? View.VISIBLE : View.GONE);
+		HostActivity.this.popButton.setVisibility(mState == HostState.PUSHED ? View.VISIBLE : View.GONE);
 	}
 
 	private class AddClickListener implements OnClickListener
@@ -145,11 +164,6 @@ public class HostActivity extends FragmentActivity
 			Log.i(TAG, "Committed transaction");
 
 			changeState(HostState.ADDED);
-
-			HostActivity.this.addButton.setVisibility(mState == HostState.ADDED ? View.GONE : View.VISIBLE);
-			HostActivity.this.pushButton.setVisibility(mState == HostState.ADDED ? View.GONE : View.VISIBLE);
-			HostActivity.this.removeButton.setVisibility(mState == HostState.ADDED ? View.VISIBLE : View.GONE);
-			HostActivity.this.popButton.setVisibility(mState == HostState.PUSHED ? View.VISIBLE : View.GONE);
 		}
 	}
 
@@ -170,10 +184,7 @@ public class HostActivity extends FragmentActivity
 			ft.commit();
 			Log.i(TAG, "Committed transaction");
 
-			HostActivity.this.addButton.setVisibility(View.GONE);
-			HostActivity.this.pushButton.setVisibility(View.GONE);
-			HostActivity.this.removeButton.setVisibility(View.GONE);
-			HostActivity.this.popButton.setVisibility(View.VISIBLE);
+			changeState(HostState.PUSHED);
 		}
 	}
 
@@ -191,10 +202,7 @@ public class HostActivity extends FragmentActivity
 			ft.commit();
 			Log.i(TAG, "Committed transaction");
 
-			HostActivity.this.addButton.setVisibility(View.VISIBLE);
-			HostActivity.this.pushButton.setVisibility(View.VISIBLE);
-			HostActivity.this.removeButton.setVisibility(View.GONE);
-			HostActivity.this.popButton.setVisibility(View.GONE);
+			changeState(HostState.NORMAL);
 		}
 	}
 
@@ -207,6 +215,8 @@ public class HostActivity extends FragmentActivity
 			Log.i(TAG, "Popping back stack");
 			fm.popBackStack();
 			Log.i(TAG, "Popped back stack");
+
+			changeState(HostState.NORMAL);
 		}
 	}
 
@@ -221,10 +231,8 @@ public class HostActivity extends FragmentActivity
 			if (fm.getBackStackEntryCount() == 0)
 			{
 				Log.i(TAG, "back stack empty");
-				HostActivity.this.addButton.setVisibility(View.VISIBLE);
-				HostActivity.this.pushButton.setVisibility(View.VISIBLE);
-				HostActivity.this.removeButton.setVisibility(View.GONE);
-				HostActivity.this.popButton.setVisibility(View.GONE);
+
+				changeState(HostState.NORMAL);
 			}
 		}
 	}

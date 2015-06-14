@@ -5,11 +5,16 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:1.2.3'
+        // for bundles @Frozen @Argument
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
 }
 
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
     }
 }
