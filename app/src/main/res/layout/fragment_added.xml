@@ -5,10 +5,11 @@
     android:background="@color/added_background"
     android:orientation="vertical" >
 
-    <TextView
+    <TextView android:id="@+id/txtLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/added_fragment"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        />
 
 </LinearLayout>

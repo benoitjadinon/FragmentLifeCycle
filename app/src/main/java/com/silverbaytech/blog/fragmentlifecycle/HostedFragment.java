@@ -25,9 +25,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class HostedFragment extends Fragment
+import com.neenbedankt.bundles.annotation.Frozen;
+
+import roboguice.fragment.RoboFragment;
+
+public class HostedFragment extends RoboFragment
 {
-	public static final String TAG = "HostedFragment";
+	public static final String TAG = HostedFragment.class.getSimpleName();
+
+	@Frozen
+	HostState mState = HostState.NORMAL;
+
 
 	public HostedFragment()
 	{

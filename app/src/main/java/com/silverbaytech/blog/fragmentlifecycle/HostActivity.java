@@ -153,7 +153,7 @@ public class HostActivity extends FragmentActivity
 		@Override
 		public void onClick(View v)
 		{
-			AddedFragment fragment = new AddedFragment();
+			AddedFragment fragment = AddedFragmentBuilder.newAddedFragment(2);
 
 			FragmentTransaction ft = HostActivity.this.getSupportFragmentManager()
 				.beginTransaction();

@@ -26,4 +26,7 @@ dependencies {
     compile 'com.android.support:support-v4:22.2.0'
     compile 'com.neenbedankt.bundles:frozen:1.0.4'
     compile 'com.neenbedankt.bundles:argument:1.0.4'
+    // RoboGuice
+    compile 'org.roboguice:roboguice:3.0.1'
+    provided 'org.roboguice:roboblender:3.0'
 }

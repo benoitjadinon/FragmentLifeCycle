@@ -24,10 +24,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.neenbedankt.bundles.annotation.Argument;
 
 public class AddedFragment extends Fragment
 {
-	public static final String TAG = "AddedFragment";
+	public static final String TAG = AddedFragment.class.getSimpleName();
+
+	@Argument
+	public int mSomeValue = 0;
+
+	private TextView txtLabel;
 
 	public AddedFragment()
 	{
@@ -47,6 +55,8 @@ public class AddedFragment extends Fragment
 	{
 		Log.i(TAG, "onCreateView enter");
 		View view = inflater.inflate(R.layout.fragment_added, container, false);
+		txtLabel = (TextView)view.findViewById(R.id.txtLabel);
+
 		Log.i(TAG, "onCreateView exit");
 		return view;
 	}
@@ -82,6 +92,8 @@ public class AddedFragment extends Fragment
 		Log.i(TAG, "onCreate enter");
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "onCreate exit");
+
+		AddedFragmentBuilder.injectArguments(this);
 	}
 
 	@Override
@@ -146,6 +158,9 @@ public class AddedFragment extends Fragment
 	{
 		Log.i(TAG, "onStart enter");
 		super.onStart();
+
+		txtLabel.setText(Integer.toString(mSomeValue));
+
 		Log.i(TAG, "onStart exit");
 	}
 
